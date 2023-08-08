@@ -16,22 +16,24 @@ def main():
     parser = argparse.ArgumentParser(description = 'Execute modified cellular life simulator')
     parser.add_argument('-i', dest= 'df', required = True, help= 'input a file containing a matrix', metavar='FILE')
     parser.add_argument('-o', dest = 'of', required = True, help = 'input a file to write new matrix', metavar = 'FILE')
+    parser.add_argument('-n', dest = 'ts', required = True, help = 'input an int for number of timesteps', metavar = 'INT')
     parser.add_argument('-t', dest = 'threadNum', required = False, nargs = '?', const = 1, type = int, help = 'input a number of threads to use')
     args = parser.parse_args()
 
     # sets input file to matrix if the file has valid syntax and characters
     matrix = validate(args.df)
     # runs the main program at a specified timestep (timestep given in range())
-    matrix = timeStep(matrix, args.threadNum)
+    matrix = timeStep(matrix, args.threadNum, args.ts)
     # writes the final matrix to the output file specified
     outputMatrix(matrix,args.of)
 #########################################################
 
-def timeStep(matrix, processes):
+def timeStep(matrix, processes, tStep):
+    tStep = int(tStep)
     # create Pool
     processPool = Pool(processes)
     # loops through timesteps
-    for steps in range(100):
+    for steps in range(tStep):
         poolData = list()
         for row in range(len(matrix)):
             data = [matrix, row]
